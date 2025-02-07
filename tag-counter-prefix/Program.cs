@@ -1,8 +1,6 @@
 ﻿using Impinj.OctaneSdk;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace RFIDReader
@@ -12,12 +10,16 @@ namespace RFIDReader
         static ConcurrentDictionary<string, bool> uniqueTags = new ConcurrentDictionary<string, bool>();
         static ImpinjReader reader = new ImpinjReader();
         static bool running = true;
-        static string configuredPrefix = "E280"; // Prefixo configurável
+        static string configuredPrefix;
 
         static void Main(string[] args)
         {
-            string readerHostname = "10.0.1.122"; // Substitua pelo IP do seu leitor
+            Console.Write("Digite o prefixo das etiquetas a serem filtradas: ");
+            configuredPrefix = Console.ReadLine()?.Trim() ?? "";
 
+            Console.Write("Digite o IP do leitor: ");
+            string readerHostname = Console.ReadLine()?.Trim() ?? "10.0.1.122";
+            
             try
             {
                 Console.WriteLine("Conectando ao leitor...");
@@ -28,21 +30,24 @@ namespace RFIDReader
                 settings.Report.Mode = ReportMode.Individual;
                 settings.Antennas.DisableAll();
                 settings.Antennas.GetAntenna(1).IsEnabled = true;
-                settings.Antennas.GetAntenna(1).TxPowerInDbm = 24.0;
+                settings.Antennas.GetAntenna(1).TxPowerInDbm = 22.0;
                 settings.Antennas.GetAntenna(3).IsEnabled = true;
-                settings.Antennas.GetAntenna(3).TxPowerInDbm = 24.0;
+                settings.Antennas.GetAntenna(3).TxPowerInDbm = 22.0;
 
                 reader.TagsReported += OnTagsReported;
                 reader.ApplySettings(settings);
                 reader.Start();
 
-                Console.WriteLine("Pressione ENTER para exibir os resultados e encerrar...");
+                Thread displayThread = new Thread(DisplayTagCount);
+                displayThread.Start();
+
+                Console.WriteLine("Pressione ENTER para exibir os resultados finais e encerrar...");
                 Console.ReadLine();
                 running = false;
 
                 reader.Stop();
                 reader.Disconnect();
-
+                
                 Console.WriteLine("Resultado da contagem de etiquetas únicas:");
                 Console.WriteLine($"Total de etiquetas únicas com prefixo {configuredPrefix}: {uniqueTags.Count}");
             }
@@ -65,6 +70,15 @@ namespace RFIDReader
                 {
                     uniqueTags.TryAdd(epc, true);
                 }
+            }
+        }
+
+        private static void DisplayTagCount()
+        {
+            while (running)
+            {
+                Console.WriteLine($"Total de etiquetas únicas com prefixo {configuredPrefix}: {uniqueTags.Count}");
+                Thread.Sleep(5000);
             }
         }
     }
