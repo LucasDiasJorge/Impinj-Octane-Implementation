@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tag-counter-prefix", "tag-c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "write-tag-data", "write-tag-data\write-tag-data.csproj", "{3B4C5D6E-7F8A-9B0C-D1E2-F3A4B5C6D7E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "near-at-hand", "near-at-hand\near-at-hand.csproj", "{04226C57-DF5E-4311-AE35-E666791AE44E}"
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{B9dD2C8A-BD1D-4FF8-A9B3-FC58467806B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9dD2C8A-BD1D-4FF8-A9B3-FC58467806B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9dD2C8A-BD1D-4FF8-A9B3-FC58467806B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04226C57-DF5E-4311-AE35-E666791AE44E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04226C57-DF5E-4311-AE35-E666791AE44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04226C57-DF5E-4311-AE35-E666791AE44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04226C57-DF5E-4311-AE35-E666791AE44E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
