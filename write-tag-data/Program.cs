@@ -16,10 +16,29 @@ namespace ImpinjWriteTags
 
         static void Main(string[] args)
         {
-            // Criamos uma relação de EPCs a serem gravados
-            TagsEncode.Add("E280110520007541DE0008B4", new TagEncode("303500000000000001010101", "E280110520007541DE0008B4", "303500000000000000000011"));
+            PopulateDictonary();
+            //WriteTags();
+        }
 
-            // TagsEncode.Add(TID to find, new TagEncode(CurrentEPC, TID, new EPC))
+        static void PopulateDictonary()
+        {
+
+            string[] epcs = File.ReadAllLines("epcs.txt");
+
+            foreach (string? epc in epcs)
+            {
+
+                Console.WriteLine($"epc: {epc}");
+
+                // Criamos uma relação de EPCs a serem gravados
+                // TagsEncode.Add(TID to find, new TagEncode(CurrentEPC, TID, new EPC))
+                //TagsEncode.Add("E280110520007541DE0008B4", new TagEncode("303500000000000001010101", "E280110520007541DE0008B4", "303500000000000000000011"));
+            }
+
+        }
+
+        static void WriteTags()
+        {
 
             Connect("10.0.1.122");
             ApplySettings();
