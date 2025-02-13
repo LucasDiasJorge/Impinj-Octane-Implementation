@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tag-couter-prefix", "tag-couter-prefix.csproj", "{2B8402F4-6DF5-5D62-F377-CE0C2F4F66D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "write-tag-data", "write-tag-data.csproj", "{A7CCB552-7770-85A3-1C1E-AAA042BEE239}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +10,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2B8402F4-6DF5-5D62-F377-CE0C2F4F66D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B8402F4-6DF5-5D62-F377-CE0C2F4F66D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B8402F4-6DF5-5D62-F377-CE0C2F4F66D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B8402F4-6DF5-5D62-F377-CE0C2F4F66D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7CCB552-7770-85A3-1C1E-AAA042BEE239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7CCB552-7770-85A3-1C1E-AAA042BEE239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7CCB552-7770-85A3-1C1E-AAA042BEE239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7CCB552-7770-85A3-1C1E-AAA042BEE239}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {390AA21C-93DB-4ED5-9A53-31358E7629BA}
+		SolutionGuid = {036F5A1C-3ABD-49C2-8E57-6C0513D23699}
 	EndGlobalSection
 EndGlobal
