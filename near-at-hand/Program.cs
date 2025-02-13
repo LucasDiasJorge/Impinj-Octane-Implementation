@@ -29,7 +29,7 @@ class Program
             settings.Antennas.DisableAll();
             settings.Session = 1; // Define a sessão do protocolo EPC Gen2
             settings.Antennas.GetAntenna(3).IsEnabled = true; // Ativa a antena 3
-            settings.Antennas.GetAntenna(3).TxPowerInDbm = 30.0; // Define a potência de transmissão (em dBm)
+            settings.Antennas.GetAntenna(3).TxPowerInDbm = 20.0; // Define a potência de transmissão (em dBm)
 
             // Define o evento de callback para quando etiquetas forem lidas
             reader.TagsReported += OnTagsReported;
