@@ -6,7 +6,7 @@ class Program
     static void Main(string[] args)
     {
         // IP ou hostname do leitor R700
-        string readerHostname = "10.0.1.122"; // Substitua pelo IP ou nome do seu leitor
+        string readerHostname = "10.0.1.173"; // Substitua pelo IP ou nome do seu leitor
 
         // Cria uma instância do leitor
         ImpinjReader reader = new ImpinjReader();
@@ -26,6 +26,8 @@ class Program
             settings.Report.IncludeAntennaPortNumber = true; // Inclui o número da antena no relatório
             settings.Report.IncludeFirstSeenTime = true; // Inclui o timestamp no relatório
 
+            settings.Report.IncludeFastId = true;
+            
             settings.Antennas.DisableAll();
             settings.Session = 1; // Define a sessão do protocolo EPC Gen2
             settings.Antennas.GetAntenna(3).IsEnabled = true; // Ativa a antena 3
@@ -65,6 +67,7 @@ class Program
         foreach (Tag tag in report)
         {
             Console.WriteLine($"EPC: {tag.Epc}");
+            Console.WriteLine($"TID: {tag.Tid.ToHexWordString()}");
             Console.WriteLine($"Antena: {tag.AntennaPortNumber}");
             Console.WriteLine($"Primeira leitura: {tag.FirstSeenTime}");
             Console.WriteLine("----");
