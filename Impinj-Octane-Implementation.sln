@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -12,7 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "write-tag-data", "write-tag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "near-at-hand", "near-at-hand\near-at-hand.csproj", "{04226C57-DF5E-4311-AE35-E666791AE44E}"
 EndProject
-
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inventory-to-csv", "inventory-to-csv\inventory-to-csv.csproj", "{E09F0FA6-6337-4BFC-A763-D663D783525E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +44,10 @@ Global
 		{04226C57-DF5E-4311-AE35-E666791AE44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04226C57-DF5E-4311-AE35-E666791AE44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04226C57-DF5E-4311-AE35-E666791AE44E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E09F0FA6-6337-4BFC-A763-D663D783525E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09F0FA6-6337-4BFC-A763-D663D783525E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09F0FA6-6337-4BFC-A763-D663D783525E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09F0FA6-6337-4BFC-A763-D663D783525E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
