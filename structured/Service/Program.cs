@@ -1,6 +1,8 @@
 ﻿using Impinj.OctaneSdk;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Configuration;
 using Service.Services.FilterService;
+using Service.Services.HttpService;
 using Service.Services.TagCallbackService;
 
 class Program
@@ -10,7 +12,12 @@ class Program
     {
         string readerHostname = "10.0.1.122"; // Substitua pelo IP ou hostname do leitor
         ImpinjReader reader = new ImpinjReader();
-        TagCallbackService tagCallbackService = new TagCallbackService(new FilterDictionary());
+
+        IConfiguration configuration = new ConfigurationBuilder().Build();
+        
+        FilterDictionary filter = new FilterDictionary(int.Parse(configuration["Filter:timestamp"] ?? throw new InvalidOperationException()));
+        HttpClientQueue queue = new HttpClientQueue(500, new HttpClientService(configuration["HttpClient:url"] ?? throw new InvalidOperationException()));
+        TagCallbackService tagCallbackService = new TagCallbackService(filter, queue);
 
         try
         {
