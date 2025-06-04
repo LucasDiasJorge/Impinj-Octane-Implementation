@@ -11,7 +11,7 @@ namespace Program
     {
         static async Task Main(string[] args)
         {
-            string readerHostname = "10.0.1.122"; // Substitua pelo IP do seu leitor
+            string readerHostname = "10.0.1.151"; // Substitua pelo IP do seu leitor
 
             // Lista de EPCs alvos
             List<string> targetEpcs = new List<string>
@@ -37,9 +37,17 @@ namespace Program
                 settings.Antennas.DisableAll();
                 settings.Session = 1;
                 settings.Antennas.GetAntenna(1).IsEnabled = true;
-                settings.Antennas.GetAntenna(1).TxPowerInDbm = 30.0;
+                settings.Antennas.GetAntenna(1).TxPowerInDbm = 10.0;
                 settings.Antennas.GetAntenna(3).IsEnabled = true;
-                settings.Antennas.GetAntenna(3).TxPowerInDbm = 30.0;
+                settings.Antennas.GetAntenna(3).TxPowerInDbm = 10.0;
+                settings.Gpis.EnableAll();
+                
+                
+                reader.GpiChanged += (impinjReader, @event) =>
+                {
+                    Console.WriteLine(@event.PortNumber);
+                    Console.WriteLine(@event.State);
+                };
 
                 reader.TagsReported += (sender, report) => OnTagsReported(sender, report, targetEpcs, reader);
                 reader.ApplySettings(settings);
@@ -134,6 +142,7 @@ namespace DesignPattern
                 Console.WriteLine("GPO 1 ativado para HIGH.");
                 IsGpoActive = true;
                 await Task.Delay(2000);
+
                 reader.SetGpo(1, false);
                 Console.WriteLine("GPO 1 desativado para LOW.");
                 IsGpoActive = false;
