@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Impinj.OctaneSdk;
 using Microsoft.Extensions.Configuration;
-using Impinj.OctaneSdk;
+using Microsoft.Extensions.DependencyInjection;
 using Service.Reader;
 using Service.Reader.Interfaces;
 using Service.Services.FilterService;
@@ -25,12 +25,12 @@ class Program
             .AddSingleton<IFilterDictionary, FilterDictionary>(sp =>
                 new FilterDictionary(int.Parse(sp.GetRequiredService<IConfiguration>()["Filter:timestamp"] ?? "5")))
             .AddSingleton<IHttpClientQueue, HttpClientQueue>(sp =>
-                new HttpClientQueue(500, new HttpClientService(sp.GetRequiredService<IConfiguration>()["HttpClient:url"] ?? throw new InvalidOperationException())))
+                new HttpClientQueue(500, 
+                    new HttpClientService(
+                        sp.GetRequiredService<IConfiguration>()["HttpClient:url"] ?? 
+                        throw new InvalidOperationException("HttpClient URL not configured"))))
             .AddSingleton<ITagCallbackService, TagCallbackService>()
             .BuildServiceProvider();
-
-        // Resolve dependencies
-        var tagCallbackService = serviceProvider.GetRequiredService<ITagCallbackService>();
 
         ImpinjReader reader = new ImpinjReader();
 
@@ -42,11 +42,12 @@ class Program
         try
         {
             Console.WriteLine("Conectando ao leitor...");
-            reader.Connect(configuration["reader:hostname"] ?? "127.0.0.1");
+            reader.Connect(configuration["Reader:hostname"] ?? "127.0.0.1");
 
             Console.WriteLine("Configurando o leitor...");
 
-            // Injected callback service
+            // Resolve through interface (recommended)
+            var tagCallbackService = serviceProvider.GetRequiredService<ITagCallbackService>();
             reader.TagsReported += tagCallbackService.OnTagsReported;
 
             reader.ApplySettings(readerServiceProvider.GetRequiredService<IReaderConfiguration>().SetConfig());

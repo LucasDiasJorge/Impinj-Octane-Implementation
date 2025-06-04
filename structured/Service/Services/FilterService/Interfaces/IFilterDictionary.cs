@@ -3,10 +3,7 @@
 namespace Service.Services.FilterService.Interfaces;
 
 public interface IFilterDictionary
-{
-    public interface IFilterDictionary
-    {
-        bool ShouldReportTag(string epc);
-    }
+{ 
+    public bool ShouldReportTag(string epc);
 
 }

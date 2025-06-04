@@ -2,6 +2,7 @@
 using Service.Services.FilterService;
 using Service.Services.FilterService.Interfaces;
 using Service.Services.HttpService;
+using Service.Services.HttpService.Interfaces;
 using Service.Services.TagCallbackService.Interfaces;
 
 namespace Service.Services.TagCallbackService;
@@ -9,12 +10,13 @@ namespace Service.Services.TagCallbackService;
 public class TagCallbackService : ITagCallbackService
 {
     
-    private readonly FilterDictionary _filters;
-    private readonly HttpClientQueue _httpClientQueue;
+    private readonly IFilterDictionary _filterDictionary;
+    private readonly IHttpClientQueue _httpClientQueue;
 
-    public TagCallbackService(FilterDictionary filters, HttpClientQueue httpClientQueue)
+    // Use interfaces in constructor
+    public TagCallbackService(IFilterDictionary filterDictionary, IHttpClientQueue httpClientQueue)
     {
-        _filters = filters;
+        _filterDictionary = filterDictionary;
         _httpClientQueue = httpClientQueue;
     }
 
@@ -22,7 +24,7 @@ public class TagCallbackService : ITagCallbackService
     {
         foreach (Tag tag in report)
         {
-            if (_filters.ShouldReportTag(tag.Epc.ToString()))
+            if (_filterDictionary.ShouldReportTag(tag.Epc.ToString()))
             {
                 _httpClientQueue.Enqueue(tag);
             }
