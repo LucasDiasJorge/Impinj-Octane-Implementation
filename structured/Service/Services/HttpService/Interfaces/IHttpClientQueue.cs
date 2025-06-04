@@ -6,6 +6,6 @@ namespace Service.Services.HttpService.Interfaces
     {
         int Count { get; }
         void Enqueue(Tag tag);
-        void Dequeue();
+        public Task DequeueAsync();
     }
 }
