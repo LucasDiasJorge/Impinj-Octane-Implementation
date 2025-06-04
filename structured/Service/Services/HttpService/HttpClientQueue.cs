@@ -18,6 +18,8 @@ public class HttpClientQueue : IHttpClientQueue
         _httpClientService = httpClientService;
         Console.WriteLine($"✅ HttpClientQueue initialized with max size: {_maxSize}");
     }
+    
+    public bool IsEmpty => _tagsToSend.Count == 0;
 
     public void Enqueue(Tag tag)
     {
