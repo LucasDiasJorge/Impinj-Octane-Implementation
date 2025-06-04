@@ -8,11 +8,11 @@ namespace Service.Services.HttpService;
 public class HttpClientService
 {
     
-    private readonly IConfiguration _config;
-
-    public HttpClientService(IConfiguration config)
+    private readonly string url;
+    
+    public HttpClientService(string url)
     {
-        _config = config;
+        this.url = url;
     }
 
     public async Task<bool> SendTagToApiAsync(Tag tag)
@@ -38,7 +38,7 @@ public class HttpClientService
 
             Console.WriteLine($"Enviando dados para API: {json}");
 
-            var response = await client.PostAsync(_config["API:DestinationService"], content);
+            var response = await client.PostAsync(url, content);
             string responseBody = await response.Content.ReadAsStringAsync(); // Obtém o corpo da resposta
 
             if (response.IsSuccessStatusCode)
