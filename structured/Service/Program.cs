@@ -1,23 +1,38 @@
-﻿using Impinj.OctaneSdk;
-using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Impinj.OctaneSdk;
 using Service.Services.FilterService;
+using Service.Services.FilterService.Interfaces;
 using Service.Services.HttpService;
+using Service.Services.HttpService.Interfaces;
 using Service.Services.TagCallbackService;
+using Service.Services.TagCallbackService.Interfaces;
 
 class Program
 {
-    
     static async Task Main(string[] args)
     {
-        string readerHostname = "10.0.1.122"; // Substitua pelo IP ou hostname do leitor
-        ImpinjReader reader = new ImpinjReader();
+        // Load configuration from appsettings.json
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
 
-        IConfiguration configuration = new ConfigurationBuilder().Build();
-        
-        FilterDictionary filter = new FilterDictionary(int.Parse(configuration["Filter:timestamp"] ?? throw new InvalidOperationException()));
-        HttpClientQueue queue = new HttpClientQueue(500, new HttpClientService(configuration["HttpClient:url"] ?? throw new InvalidOperationException()));
-        TagCallbackService tagCallbackService = new TagCallbackService(filter, queue);
+        // Setup Dependency Injection
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .AddSingleton<IFilterDictionary, FilterDictionary>(sp =>
+                new FilterDictionary(int.Parse(sp.GetRequiredService<IConfiguration>()["Filter:timestamp"] ?? "5")))
+            .AddSingleton<IHttpClientQueue, HttpClientQueue>(sp =>
+                new HttpClientQueue(500, new HttpClientService(sp.GetRequiredService<IConfiguration>()["HttpClient:url"] ?? throw new InvalidOperationException())))
+            .AddSingleton<ITagCallbackService, TagCallbackService>()
+            .BuildServiceProvider();
+
+        // Resolve dependencies
+        var tagCallbackService = serviceProvider.GetRequiredService<ITagCallbackService>();
+
+        // Reader setup
+        string readerHostname = "10.0.1.122";
+        ImpinjReader reader = new ImpinjReader();
 
         try
         {
@@ -26,11 +41,12 @@ class Program
 
             Console.WriteLine("Configurando o leitor...");
             Settings settings = reader.QueryDefaultSettings();
-            settings.Report.Mode = ReportMode.Individual; // Relatar etiquetas individualmente
-            settings.Report.IncludeFirstSeenTime = true; // Incluir o timestamp da primeira leitura
-            settings.Antennas.GetAntenna(1).IsEnabled = true; // Ativar a antena 1
-            settings.Antennas.GetAntenna(1).TxPowerInDbm = 24.0; // Potência de transmissão
+            settings.Report.Mode = ReportMode.Individual;
+            settings.Report.IncludeFirstSeenTime = true;
+            settings.Antennas.GetAntenna(1).IsEnabled = true;
+            settings.Antennas.GetAntenna(1).TxPowerInDbm = 24.0;
 
+            // Injected callback service
             reader.TagsReported += tagCallbackService.OnTagsReported;
 
             reader.ApplySettings(settings);
@@ -53,6 +69,4 @@ class Program
             Console.WriteLine($"Erro geral: {ex.Message}");
         }
     }
-
-    
 }
