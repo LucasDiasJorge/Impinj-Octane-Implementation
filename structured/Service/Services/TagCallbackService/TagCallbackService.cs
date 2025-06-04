@@ -25,7 +25,6 @@ public class TagCallbackService : ITagCallbackService
             if (_filters.ShouldReportTag(tag.Epc.ToString()))
             {
                 _httpClientQueue.Enqueue(tag);
-                // Enqueue
             }
         }
     }
