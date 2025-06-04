@@ -11,6 +11,7 @@ using Service.Services.HttpService;
 using Service.Services.HttpService.Interfaces;
 using Service.Services.TagCallbackService;
 using Service.Services.TagCallbackService.Interfaces;
+using Service.Services.TagReporterService;
 
 class Program
 {
@@ -18,6 +19,7 @@ class Program
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        var cts = new CancellationTokenSource();
         
         // Load configuration from appsettings.json
         IConfiguration configuration = new ConfigurationBuilder()
@@ -35,6 +37,7 @@ class Program
                         sp.GetRequiredService<IConfiguration>()["HttpClient:url"] ?? 
                         throw new InvalidOperationException("HttpClient URL not configured"))))
             .AddSingleton<ITagCallbackService, TagCallbackService>()
+            .AddSingleton<ITagReporterService, TagReporterService>()
             .BuildServiceProvider();
 
         ImpinjReader reader = new ImpinjReader();
@@ -43,7 +46,9 @@ class Program
             .AddSingleton(reader)
             .AddSingleton<IReaderConfiguration, ReaderConfiguration>()
             .BuildServiceProvider();
-
+        
+        var backgroudTask = serviceProvider.GetRequiredService<ITagReporterService>().ExecuteAsync(cts.Token);
+        
         try
         {
             Console.WriteLine("Conectando ao leitor...");
@@ -62,6 +67,8 @@ class Program
             Console.WriteLine("Pressione ENTER para parar a leitura...");
             Console.ReadLine();
 
+            cts.Dispose();
+            
             Console.WriteLine("Parando a leitura e desconectando...");
             reader.Stop();
             reader.Disconnect();
