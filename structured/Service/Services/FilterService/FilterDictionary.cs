@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using Service.Services.FilterService.Interfaces;
 
 namespace Service.Services.FilterService;
 
-public class FilterDictionary
+public class FilterDictionary : IFilterDictionary
 {
     private static readonly ConcurrentDictionary<string, DateTime> LastReadTimes = new();
 

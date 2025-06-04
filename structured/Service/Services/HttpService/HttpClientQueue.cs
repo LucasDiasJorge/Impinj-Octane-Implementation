@@ -1,8 +1,9 @@
 ﻿using Impinj.OctaneSdk;
+using Service.Services.HttpService.Interfaces;
 
 namespace Service.Services.HttpService;
 
-public class HttpClientQueue
+public class HttpClientQueue : IHttpClientQueue
 {
     private readonly Queue<Tag> _tagsToSend = new();
     private readonly int _maxSize;

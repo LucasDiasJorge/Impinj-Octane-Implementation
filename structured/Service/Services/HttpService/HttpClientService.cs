@@ -2,10 +2,11 @@
 using System.Text.Json;
 using Impinj.OctaneSdk;
 using Microsoft.Extensions.Configuration;
+using Service.Services.HttpService.Interfaces;
 
 namespace Service.Services.HttpService;
 
-public class HttpClientService
+public class HttpClientService : IHttpClientService
 {
     
     private readonly string url;

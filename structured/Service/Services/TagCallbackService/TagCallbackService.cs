@@ -1,10 +1,12 @@
 ﻿using Impinj.OctaneSdk;
 using Service.Services.FilterService;
+using Service.Services.FilterService.Interfaces;
 using Service.Services.HttpService;
+using Service.Services.TagCallbackService.Interfaces;
 
 namespace Service.Services.TagCallbackService;
 
-public class TagCallbackService
+public class TagCallbackService : ITagCallbackService
 {
     
     private readonly FilterDictionary _filters;

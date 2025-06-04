@@ -31,7 +31,6 @@ class Program
             settings.Antennas.GetAntenna(1).IsEnabled = true; // Ativar a antena 1
             settings.Antennas.GetAntenna(1).TxPowerInDbm = 24.0; // Potência de transmissão
 
-            // Callback para processar etiquetas lidas
             reader.TagsReported += tagCallbackService.OnTagsReported;
 
             reader.ApplySettings(settings);
