@@ -37,19 +37,19 @@ public class HttpClientService : IHttpClientService
             var json = JsonSerializer.Serialize(tagData, new JsonSerializerOptions { WriteIndented = true });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            Console.WriteLine($"Enviando dados para API: {json}");
+            Console.WriteLine($"Sent to API: {json}");
 
             var response = await client.PostAsync(url, content);
             string responseBody = await response.Content.ReadAsStringAsync(); // Obtém o corpo da resposta
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"✔ Etiqueta {tag.Epc} reportada com sucesso!");
+                Console.WriteLine($"✔ Tag {tag.Epc} reported successfully!");
                 return true;
             }
             else
             {
-                Console.WriteLine($"❌ Erro ao reportar {tag.Epc}");
+                Console.WriteLine($"❌ Error while report {tag.Epc}");
                 Console.WriteLine($"Status Code: {response.StatusCode} ({(int)response.StatusCode})");
                 Console.WriteLine($"Response Headers: {response.Headers}");
                 Console.WriteLine($"Response Body: {responseBody}");
@@ -57,15 +57,15 @@ public class HttpClientService : IHttpClientService
         }
         catch (HttpRequestException httpEx)
         {
-            Console.WriteLine($"❗ Erro HTTP: {httpEx.Message}");
+            Console.WriteLine($"❗ Error HTTP: {httpEx.Message}");
         }
         catch (TaskCanceledException tcEx)
         {
-            Console.WriteLine($"⏳ Timeout ou requisição cancelada: {tcEx.Message}");
+            Console.WriteLine($"⏳ Timeout or request was cancelled: {tcEx.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"⚠ Erro inesperado ao enviar dados para a API: {ex.Message}");
+            Console.WriteLine($"⚠ Non mapped error during request: {ex.Message}");
         }
         return false;
 
