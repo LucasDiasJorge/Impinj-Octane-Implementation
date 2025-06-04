@@ -1,7 +1,7 @@
 ﻿using Impinj.OctaneSdk;
-using Service.Reader.Interfaces;
+using Service.Reader.Config.Interfaces;
 
-namespace Service.Reader;
+namespace Service.Reader.Config;
 
 public class ReaderConfiguration : IReaderConfiguration
 {
