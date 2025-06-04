@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Impinj.OctaneSdk;
+using Service.Reader;
+using Service.Reader.Interfaces;
 using Service.Services.FilterService;
 using Service.Services.FilterService.Interfaces;
 using Service.Services.HttpService;
@@ -30,26 +32,24 @@ class Program
         // Resolve dependencies
         var tagCallbackService = serviceProvider.GetRequiredService<ITagCallbackService>();
 
-        // Reader setup
-        string readerHostname = "10.0.1.122";
         ImpinjReader reader = new ImpinjReader();
+
+        var readerServiceProvider = new ServiceCollection()
+            .AddSingleton(reader)
+            .AddSingleton<IReaderConfiguration, ReaderConfiguration>()
+            .BuildServiceProvider();
 
         try
         {
             Console.WriteLine("Conectando ao leitor...");
-            reader.Connect(readerHostname);
+            reader.Connect(configuration["reader:hostname"] ?? "127.0.0.1");
 
             Console.WriteLine("Configurando o leitor...");
-            Settings settings = reader.QueryDefaultSettings();
-            settings.Report.Mode = ReportMode.Individual;
-            settings.Report.IncludeFirstSeenTime = true;
-            settings.Antennas.GetAntenna(1).IsEnabled = true;
-            settings.Antennas.GetAntenna(1).TxPowerInDbm = 24.0;
 
             // Injected callback service
             reader.TagsReported += tagCallbackService.OnTagsReported;
 
-            reader.ApplySettings(settings);
+            reader.ApplySettings(readerServiceProvider.GetRequiredService<IReaderConfiguration>().SetConfig());
             Console.WriteLine("Iniciando leitura...");
             reader.Start();
 
