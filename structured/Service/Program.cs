@@ -1,4 +1,5 @@
-﻿using Impinj.OctaneSdk;
+﻿using System.Globalization;
+using Impinj.OctaneSdk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Reader;
@@ -14,6 +15,9 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        
         // Load configuration from appsettings.json
         IConfiguration configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
