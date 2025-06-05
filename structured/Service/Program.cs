@@ -2,6 +2,7 @@
 using Impinj.OctaneSdk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Service.Helper;
 using Service.Reader;
 using Service.Reader.Config;
 using Service.Reader.Config.Interfaces;
@@ -31,8 +32,8 @@ class Program
             .AddSingleton<IConfiguration>(configuration)
             .AddSingleton<IFilterDictionary, FilterDictionary>(sp =>
                 new FilterDictionary(int.Parse(sp.GetRequiredService<IConfiguration>()["Filter:timestamp"] ?? "5")))
-            .AddSingleton<IHttpClientQueue, HttpClientQueue>(sp =>
-                new HttpClientQueue(500, 
+            .AddSingleton<IHttpClientQueueService, HttpClientQueueService>(sp =>
+                new HttpClientQueueService(500, 
                     new HttpClientService(
                         sp.GetRequiredService<IConfiguration>()["HttpClient:url"] ?? 
                         throw new InvalidOperationException("HttpClient URL not configured"))))
