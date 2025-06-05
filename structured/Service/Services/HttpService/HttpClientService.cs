@@ -22,29 +22,34 @@ public class HttpClientService : IHttpClientService
         {
             using HttpClient client = new();
 
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "<BEARER TOKEN>");
-
-            var tagData = new
+            client.DefaultRequestHeaders.Add("X-API-KEY", "application/json");
+            
+            var requestData = new
             {
-                Epc = tag.Epc.ToString(),
-                Antenna = tag.AntennaPortNumber,
-                Timestamp = tag.FirstSeenTime.Utc,
-                Rssi = tag.PeakRssiInDbm
+                data = new[]
+                {
+                    new
+                    {
+                        epc = tag.Epc.ToString(),
+                        antenna = tag.AntennaPortNumber,
+                        timestamp = tag.FirstSeenTime.Utc / 1000000,
+                    }
+                }
             };
 
-            Console.WriteLine(tagData);
+            //Console.WriteLine(tagData);
 
-            var json = JsonSerializer.Serialize(tagData, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(requestData, new JsonSerializerOptions { WriteIndented = true });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            Console.WriteLine($"Sent to API: {json}");
+            //Console.WriteLine($"Sent to API: {json}");
 
             var response = await client.PostAsync(url, content);
             string responseBody = await response.Content.ReadAsStringAsync(); // Obtém o corpo da resposta
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"✔ Tag {tag.Epc} reported successfully!");
+                //Console.WriteLine($"✔ Tag {tag.Epc} reported successfully!");
                 return true;
             }
             else
@@ -53,6 +58,7 @@ public class HttpClientService : IHttpClientService
                 Console.WriteLine($"Status Code: {response.StatusCode} ({(int)response.StatusCode})");
                 Console.WriteLine($"Response Headers: {response.Headers}");
                 Console.WriteLine($"Response Body: {responseBody}");
+                Console.WriteLine($"Posting Body: {json}");
             }
         }
         catch (HttpRequestException httpEx)

@@ -2,7 +2,7 @@
 
 namespace Service.Services.HttpService.Interfaces
 {
-    public interface IHttpClientQueue
+    public interface IHttpClientQueueService
     {
         int Count { get; }
         bool IsEmpty { get; }

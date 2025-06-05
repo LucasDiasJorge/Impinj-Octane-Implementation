@@ -11,13 +11,13 @@ public class TagCallbackService : ITagCallbackService
 {
     
     private readonly IFilterDictionary _filterDictionary;
-    private readonly IHttpClientQueue _httpClientQueue;
+    private readonly IHttpClientQueueService _httpClientQueueService;
 
     // Use interfaces in constructor
-    public TagCallbackService(IFilterDictionary filterDictionary, IHttpClientQueue httpClientQueue)
+    public TagCallbackService(IFilterDictionary filterDictionary, IHttpClientQueueService httpClientQueueService)
     {
         _filterDictionary = filterDictionary;
-        _httpClientQueue = httpClientQueue;
+        _httpClientQueueService = httpClientQueueService;
     }
 
     public void OnTagsReported(object sender, TagReport report)
@@ -26,7 +26,7 @@ public class TagCallbackService : ITagCallbackService
         {
             if (_filterDictionary.ShouldReportTag(tag.Epc.ToString()))
             {
-                _httpClientQueue.Enqueue(tag);
+                _httpClientQueueService.Enqueue(tag);
             }
         }
     }

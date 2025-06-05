@@ -4,7 +4,7 @@ using Service.Services.HttpService.Interfaces;
 
 namespace Service.Services.HttpService;
 
-public class HttpClientQueue : IHttpClientQueue
+public class HttpClientQueueService : IHttpClientQueueService
 {
     private readonly ConcurrentQueue<Tag> _tagsToSend = new();
     private readonly int _maxSize;
@@ -12,7 +12,7 @@ public class HttpClientQueue : IHttpClientQueue
 
     public int Count => _tagsToSend.Count;
 
-    public HttpClientQueue(int maxSize, HttpClientService httpClientService)
+    public HttpClientQueueService(int maxSize, HttpClientService httpClientService)
     {
         _maxSize = maxSize;
         _httpClientService = httpClientService;
@@ -35,35 +35,28 @@ public class HttpClientQueue : IHttpClientQueue
 
     public async Task DequeueAsync()
     {
-        if (_tagsToSend.IsEmpty)
+        if (!_tagsToSend.TryPeek(out Tag? tag))
         {
-            Console.WriteLine("⚠ Queue is empty. No tag to dequeue.");
             return;
         }
 
-        if (_tagsToSend.TryDequeue(out Tag tag))
+        try
         {
-            Console.WriteLine($"🔄 Attempting to send tag {tag.Epc} to API...");
+            bool success = await _httpClientService.SendTagToApiAsync(tag);
 
-            try
+            if (success)
             {
-                bool success = await _httpClientService.SendTagToApiAsync(tag);
-
-                if (success)
-                {
-                    Console.WriteLine($"✔ Successfully dequeued and reported tag: {tag.Epc} | Remaining queue size: {_tagsToSend.Count}");
-                }
-                else
-                {
-                    Console.WriteLine($"❌ API reporting failed for tag: {tag.Epc}. Re-enqueuing...");
-                    _tagsToSend.Enqueue(tag);
-                }
+                _tagsToSend.TryDequeue(out _); 
+                //Console.WriteLine($"✔ Successfully reported tag: {tag.Epc} | Remaining queue size: {_tagsToSend.Count}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"⚠ Unexpected error when sending tag {tag.Epc}: {ex.Message}");
-                _tagsToSend.Enqueue(tag); // Re-enqueue failed tag
+                //Console.WriteLine($"❌ API reporting failed for tag: {tag.Epc}. Keeping in queue...");
             }
+        }
+        catch (Exception ex)
+        {
+            //Console.WriteLine($"⚠ Unexpected error when sending tag {tag.Epc}: {ex.Message}");
         }
     }
 
